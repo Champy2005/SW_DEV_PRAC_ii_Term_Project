@@ -42,17 +42,34 @@ test("member signs up, reserves, sees duplicate error, moves and cancels", async
   await page.goto("/");
   await page.getByRole("heading", { name: reactWorkshop }).getByRole("link").click();
   await page.getByRole("button", { name: "Register for this workshop" }).click();
-  await expect(page).toHaveURL(/\/registrations/);
-  await expect(page.getByRole("heading", { name: reactWorkshop })).toBeVisible();
+  await expect(page).toHaveURL(/\/registrations\?registered=[a-f0-9]{24}$/);
+  const referenceId = new URL(page.url()).searchParams.get("registered")!;
+  await expect(page.getByRole("status")).toContainText(referenceId);
+  const card = page.getByRole("article", { name: reactWorkshop, exact: true });
+  await expect(card).toContainText(`Reference ID ${referenceId}`);
   await page.getByRole("heading", { name: reactWorkshop }).getByRole("link").click();
+  await expect(page.getByRole("status")).toContainText(`You’re registered for this workshop. Reference ID ${referenceId}`);
+  await expect(page.getByRole("button", { name: "Register for this workshop" })).toHaveCount(0);
+  // Direct request still hits the backend duplicate check even when the UI hides the button.
+  const duplicate = await page.request.post("/api/backend/registrations", {
+    headers: { Origin: new URL(page.url()).origin },
+    data: { workshop: page.url().split("/").pop() },
+  });
+  expect(duplicate.status()).toBe(409);
+  expect((await duplicate.json()).error).toMatch(/already registered/i);
+  // Trying to book the full 1-seat scenario workshop surfaces the server capacity error in the UI.
+  await page.goto("/");
+  await page.getByRole("heading", { name: "Pottery Taster: One Seat" }).getByRole("link").click();
   await page.getByRole("button", { name: "Register for this workshop" }).click();
-  await expect(page.getByRole("main").getByRole("alert")).toContainText("already registered");
+  await expect(page.getByRole("main").getByRole("alert")).toContainText("capacity has been reached");
   await page.goto("/registrations");
   await page.getByRole("button", { name: "Change workshop" }).click();
   const option = page.getByLabel("Choose a workshop").locator("option").filter({ hasText: designWorkshop });
   await page.getByLabel("Choose a workshop").selectOption((await option.getAttribute("value"))!);
   await page.getByRole("button", { name: "Move registration", exact: true }).click();
-  await expect(page.getByRole("heading", { name: designWorkshop })).toBeVisible();
+  const movedCard = page.getByRole("article", { name: designWorkshop, exact: true });
+  await expect(movedCard).toBeVisible();
+  await expect(movedCard).toContainText(`Reference ID ${referenceId}`);
   await page.getByRole("button", { name: "Cancel registration", exact: true }).click();
   await page.getByRole("button", { name: "Yes, cancel registration" }).click();
   await expect(page.getByRole("heading", { name: "Your next experience is waiting." })).toBeVisible();
@@ -136,4 +153,19 @@ test("admin can move and cancel another member's registration", async ({ page, r
   // Request context remains the member's session; this observes the admin change as its owner.
   const own = await (await request.get("/api/backend/registrations")).json();
   expect(own.data).toEqual([]);
+});
+
+test("demo member reaches the 3-active limit while past history is excluded and closed", async ({ page }) => {
+  await login(page, "member@workshop.local");
+  await expect(page.getByText("You have 2 of 3 active workshop registrations.")).toBeVisible();
+  await expect(page.getByRole("article", { name: "Sunset Watercolour", exact: true })).toBeVisible();
+  await page.goto("/workshops/690100000000000000000008");
+  await expect(page.getByText("Registration has closed for this workshop.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Register for this workshop" })).toHaveCount(0);
+  await page.goto("/workshops/690100000000000000000005");
+  await page.getByRole("button", { name: "Register for this workshop" }).click();
+  await expect(page.getByText("You have 3 of 3 active workshop registrations.")).toBeVisible();
+  await page.goto("/workshops/690100000000000000000004");
+  await expect(page.getByRole("status")).toContainText("You already have 3 of 3 active workshop registrations.");
+  await expect(page.getByRole("button", { name: "Register for this workshop" })).toHaveCount(0);
 });

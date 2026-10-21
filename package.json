@@ -11,6 +11,7 @@
     "db:up": "docker compose up -d mongo",
     "db:down": "docker compose stop mongo",
     "db:seed": "npm run seed -w apps/api",
+    "db:seed:scenarios": "npm run seed -w apps/api -- --scenarios",
     "lint": "npm run lint -w apps/web",
     "typecheck": "npm run typecheck -w apps/web",
     "test": "npm run test:unit && npm run test:api",

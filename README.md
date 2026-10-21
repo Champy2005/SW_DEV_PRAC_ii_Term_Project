@@ -16,7 +16,7 @@ npm run dev:demo
 
 Open [the app](http://127.0.0.1:3000) and [API documentation](http://127.0.0.1:5000/api-docs). `setup` creates missing local environment files and a random local JWT secret without replacing existing files. `dev:demo` starts an ephemeral MongoDB process, seeds demo data, and runs both applications. The first run downloads a MongoDB binary and requires internet access. Stop with Ctrl+C. Demo database changes disappear when the process ends.
 
-Demo accounts: `admin@workshop.local` or `member@workshop.local`, password `WorkshopDemo123!`. These are local fixture credentials.
+Demo accounts: `admin@workshop.local`, `member@workshop.local`, and `member2@workshop.local`, password `WorkshopDemo123!`. These are local fixture credentials. `dev:demo` also seeds rule-boundary scenarios (a full 1-seat workshop, a past workshop, and two active registrations for `member@workshop.local`).
 
 For data that survives restarts, start Docker Desktop, then:
 
@@ -26,7 +26,7 @@ npm run db:seed
 npm run dev
 ```
 
-`dev` uses the MongoDB URI configured in `apps/api/config/config.env`; it does not start a database. You can also use an existing local MongoDB or MongoDB Atlas. Keep personal credentials in local environment files.
+Use `npm run db:seed:scenarios` instead of `npm run db:seed` if you also want the rule-boundary fixtures in a persistent development database. `dev` uses the MongoDB URI configured in `apps/api/config/config.env`; it does not start a database. You can also use an existing local MongoDB or MongoDB Atlas. Keep personal credentials in local environment files.
 
 ## Verify changes
 

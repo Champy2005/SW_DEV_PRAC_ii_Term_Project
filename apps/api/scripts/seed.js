@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Workshop = require("../models/Workshop");
+const Registration = require("../models/Registration");
 
 const DEMO_PASSWORD = "WorkshopDemo123!";
 const DEMO_EMAILS = { admin: "admin@workshop.local", member: "member@workshop.local" };
@@ -23,11 +24,28 @@ const workshopFixtures = [
   { name: "Ship Your Next.js Project", description: "Bring routing, server rendering, forms, and deployment together in a guided Next.js project workshop.", instructor: "Siri Kitt", location: "Computer Lab, Room 401", capacity: 22, days: 28 },
 ];
 
-/** Requires an existing MongoDB connection. Inserts fixtures without changing existing records. */
+/**
+ * Optional demo boundary data, so each business rule can be shown in one or two clicks:
+ * - a one-seat workshop already taken by a second member (capacity, C02);
+ * - a past workshop the demo member attended (past-date rule C05; history excluded from C04);
+ * - two active registrations for the demo member, so the third succeeds and the fourth is refused (C04).
+ * The past workshop and its registration are inserted directly because the API correctly rejects past dates.
+ */
+const SCENARIO_MEMBER_EMAIL = "member2@workshop.local";
+const scenarioWorkshops = [
+  { _id: "690100000000000000000007", name: "Pottery Taster: One Seat", description: "Shape a small bowl on the wheel in a one-to-one taster session.", instructor: "Kanya Dee", location: "Craft Room, Floor 1", capacity: 1, days: 5 },
+  { _id: "690100000000000000000008", name: "Sunset Watercolour", description: "Mix colour washes and paint a simple evening landscape.", instructor: "Ploy Arun", location: "Art Room, Floor 3", capacity: 12, days: -3 },
+];
+
+/**
+ * Requires an existing MongoDB connection. Inserts fixtures without changing existing records.
+ * `scenarios: true` adds the demo boundary data described above (demo/test databases only).
+ */
 async function seedDemoData({
   now = new Date(),
   adminPassword = process.env.DEMO_ADMIN_PASSWORD || DEMO_PASSWORD,
   memberPassword = process.env.DEMO_MEMBER_PASSWORD || DEMO_PASSWORD,
+  scenarios = false,
 } = {}) {
   if (process.env.NODE_ENV === "production") throw new Error("Demo seeding is available only outside production.");
   if (Number.isNaN(new Date(now).getTime())) throw new Error("A valid seed date is required.");
@@ -57,6 +75,34 @@ async function seedDemoData({
     );
     workshops.push(workshop);
   }
+  if (!scenarios) return { users, workshops };
+
+  const scenarioPassword = await bcrypt.hash(memberPassword, 10);
+  users.secondMember = await User.findOneAndUpdate(
+    { email: SCENARIO_MEMBER_EMAIL },
+    { $setOnInsert: { name: "Second Demo Member", email: SCENARIO_MEMBER_EMAIL, tel: "0810000003", role: "member", password: scenarioPassword } },
+    { upsert: true, new: true, runValidators: true }
+  );
+  const extra = {};
+  for (const { _id, days, ...fields } of scenarioWorkshops) {
+    extra[_id] = await Workshop.findOneAndUpdate(
+      { _id: new mongoose.Types.ObjectId(_id) },
+      { $setOnInsert: { ...fields, workshopDate: futureDate(now, days), isActive: true, createdAt: new Date(now), updatedAt: new Date(now) } },
+      { upsert: true, new: true, runValidators: true, timestamps: false }
+    );
+    workshops.push(extra[_id]);
+  }
+  const [pottery, watercolour] = scenarioWorkshops.map((item) => extra[item._id]);
+  const placements = [
+    [users.secondMember, pottery],
+    [users.member, watercolour],
+    [users.member, workshops[0]],
+    [users.member, workshops[2]],
+  ];
+  await Registration.init();
+  for (const [user, workshop] of placements) {
+    await Registration.updateOne({ user: user._id, workshop: workshop._id }, { $setOnInsert: { user: user._id, workshop: workshop._id } }, { upsert: true });
+  }
   return { users, workshops };
 }
 
@@ -64,9 +110,10 @@ async function main() {
   if (!process.env.MONGO_URI) throw new Error("MONGO_URI is required. Configure config/config.env before seeding.");
   try {
     await mongoose.connect(process.env.MONGO_URI);
-    const result = await seedDemoData();
-    console.log(`Demo data ready: ${Object.keys(result.users).length} accounts, ${result.workshops.length} workshops.`);
-    console.log(`Emails: ${DEMO_EMAILS.admin}, ${DEMO_EMAILS.member}`);
+    const scenarios = process.argv.includes("--scenarios");
+    const result = await seedDemoData({ scenarios });
+    console.log(`Demo data ready: ${Object.keys(result.users).length} accounts, ${result.workshops.length} workshops${scenarios ? " (with rule scenarios)" : ""}.`);
+    console.log(`Emails: ${DEMO_EMAILS.admin}, ${DEMO_EMAILS.member}${scenarios ? `, ${SCENARIO_MEMBER_EMAIL}` : ""}`);
   } finally {
     await mongoose.disconnect();
   }
@@ -79,4 +126,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { seedDemoData, DEMO_EMAILS, DEMO_PASSWORD };
+module.exports = { seedDemoData, DEMO_EMAILS, DEMO_PASSWORD, SCENARIO_MEMBER_EMAIL };
