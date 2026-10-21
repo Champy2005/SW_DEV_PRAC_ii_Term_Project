@@ -1,0 +1,15 @@
+import { RetryButton } from '@/components/retry-button';
+import { SearchIcon } from '@/components/icons';
+import { WorkshopCatalog } from '@/components/workshop-catalog';
+import { serverApi } from '@/lib/server';
+import type { Workshop } from '@/lib/types';
+
+export default async function Home({ searchParams }: { searchParams: Promise<{ search?: string | string[] }> }) {
+  const params = await searchParams;
+  const search = typeof params.search === 'string' ? params.search.trim().slice(0, 120) : '';
+  let workshops: Workshop[] = [];
+  let unavailable = false;
+  try { workshops = await serverApi<Workshop[]>(`/workshops${search ? `?search=${encodeURIComponent(search)}` : ''}`); }
+  catch { unavailable = true; }
+  return <><section className="hero page-width"><div className="hero-copy"><p className="eyebrow"><span className="eyebrow-line"/> FOR THE CURIOUS IN ALL OF US</p><h1>Step out of the scroll.<br/>Make <em>something.</em></h1><p className="hero-description">A fresh skill. A new perspective. Something made by you.<br className="desktop-break"/> Find a hands-on workshop and pull up a chair.</p><form className="search-form" action="/" method="get" role="search"><label htmlFor="workshop-search" className="sr-only">Search workshops</label><SearchIcon/><input id="workshop-search" name="search" type="search" placeholder="What would you like to try?" defaultValue={search} maxLength={120}/><button className="button" type="submit">Find a workshop <span aria-hidden="true">↗</span></button></form><p className="hero-footnote"><span aria-hidden="true">✳</span> Make time for your next favourite thing.</p></div><div className="hero-illustration" aria-hidden="true"><span className="hero-note note-top">LESS SCROLLING.<br/>MORE DOING.</span><div className="hero-tile tile-green"><div className="flower"><span/><span/><span/><span/><i/></div></div><div className="hero-tile tile-orange"><div className="ceramic-pot"><i/></div><span className="tile-caption">a little<br/><em>possibility.</em></span></div><span className="hero-stamp">GOOD THINGS<br/><b>TAKE SHAPE</b><span>✳</span></span><span className="hero-note note-bottom">COME AS YOU ARE. LEAVE WITH SOMETHING NEW.</span></div></section><div className="promise-bar"><div className="page-width"><span><b aria-hidden="true">✳</b> Learn by doing</span><span><b aria-hidden="true">↗</b> Meet a new interest</span><span><b aria-hidden="true">◎</b> Make it your own</span></div></div><div className="page-width catalog-container">{unavailable ? <section className="empty-state service-error" role="alert"><h2>The workshop table is being set.</h2><p>We couldn’t load workshops. Please try again in a moment.</p><RetryButton/></section> : <WorkshopCatalog workshops={workshops} search={search}/>}</div><section className="closing-banner page-width"><span aria-hidden="true">✳</span><div><p className="eyebrow">YOUR NEXT “I MADE THAT” MOMENT</p><h2>Leave a little room for curiosity.</h2></div><a href="#workshop-search" className="button button-secondary">Find your workshop <span aria-hidden="true">↗</span></a></section></>;
+}
