@@ -30,13 +30,15 @@ test('confirmation disappears when its registration is cancelled, even with a st
   await createMember(page.request, baseURL!);
   const id = await createRegistration(page.request, baseURL!);
   await page.goto(`/registrations?registered=${id}`);
-  const confirmation = page.getByRole('main').getByRole('status');
+  // Only the registration confirmation counts here; the cancel notice is a different status.
+  const confirmation = page.getByRole('main').getByRole('status').filter({ hasText: 'You’re registered!' });
   await expect(confirmation).toContainText(id);
 
   await page.getByRole('button', { name: 'Cancel registration', exact: true }).click();
   await page.getByRole('button', { name: 'Yes, cancel registration' }).click();
   await expect(page.getByRole('article')).toHaveCount(0);
   await expect(confirmation).toHaveCount(0);
+  await expect(page.getByRole('main').getByRole('status')).toContainText('is cancelled');
   await expect(page).toHaveURL(new RegExp(`registered=${id}$`));
   await page.reload();
   await expect(confirmation).toHaveCount(0);

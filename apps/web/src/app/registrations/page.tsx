@@ -71,7 +71,9 @@ export default async function RegistrationsPage({
         user={user}
       />
       <p className="dashboard-footnote">
-        Dates are shown in UTC. Workshop capacity is the total group size.
+        {admin
+          ? "Dates are shown in UTC."
+          : `Dates are shown in UTC. Only Upcoming registrations count toward your ${ACTIVE_REGISTRATION_LIMIT} active registrations.`}
       </p>
     </div>
   );

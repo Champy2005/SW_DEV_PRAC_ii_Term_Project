@@ -1347,9 +1347,27 @@ h3 {
   flex-grow: 1;
   min-width: 0;
 }
-.registration-details .eyebrow {
-  font-size: 8px;
-  margin-bottom: 7px;
+.registration-details .inline-meta {
+  align-items: center;
+}
+/* State is named in text; the tint only reinforces it. */
+.registration-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  background: var(--lime);
+  color: var(--green-dark);
+}
+.registration-status.is-past {
+  background: #ecebe3;
+  color: var(--ink);
+}
+.registration-status.is-unavailable {
+  background: #f6e7de;
+  color: #8b3926;
 }
 .registration-details h2 {
   font-size: 29px;
