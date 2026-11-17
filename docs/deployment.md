@@ -1,6 +1,10 @@
 # Deployment (WR-010)
 
-**Status, 17 November 2026: prepared, not deployed.** The repository is ready, but none of the steps below have run against a real host yet. The accounts, the secrets and the act of publishing belong to the team. Record real URLs and results in [verification](verification.md) after deploying.
+**Status, 17 November 2026: deployed.**
+- **Frontend:** Vercel, at **https://sw-dev-prac-ii-term-project.vercel.app**.
+- **API:** one Render web service.
+- **Database:** MongoDB Atlas.
+- **Record:** URLs and results are in [the table below](#record-after-deploying) and the [verification history](verification.md). The accounts and secrets stay with the team.
 
 ## Topology
 
@@ -151,8 +155,13 @@ Run it in a fresh private browser window, then record the date, URLs and results
 
 | Item | Value |
 |---|---|
-| Vercel production URL | |
-| API URL | |
-| Atlas cluster / database | `workshop-registration` |
-| Deployed commit | |
-| Smoke test date and result | |
+| Vercel production URL | https://sw-dev-prac-ii-term-project.vercel.app |
+| API URL | https://sw-dev-prac-ii-term-project.onrender.com (Render free web service, 1 instance) |
+| Atlas cluster / database | `Cluster0` / `workshop-registration`, seeded with `db:seed:scenarios` using private passwords |
+| Deployed commit | `cbe9d86` (merge of PR #1 into `main`) |
+| Smoke test date and result | 17 November 2026: the team ran the section 6 checklist in a private window and everything passed |
+
+**Notes from the first deployment:**
+- **Vercel suggests a "Services" setup.** It offers to import the repository as a multi-service project with a `vercel.json`. Don't: choose **Import single project** for `apps/web` only, and leave its "Deploy" suggestion for `apps/api` alone.
+- **Atlas DNS on some machines.** On a machine whose DNS server is a local proxy (`127.0.0.1`), Atlas `mongodb+srv` lookups are refused. The seed script now connects through `config/db.js`, which uses public resolvers, as the API already did.
+- **Browser storage.** `localStorage` holds only `crafttable:saved-workshops` (saved workshop IDs). The session token stays in the HttpOnly cookie.

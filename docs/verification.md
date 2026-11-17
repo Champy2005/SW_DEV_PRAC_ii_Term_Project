@@ -1,5 +1,38 @@
 # Verification history
 
+## 17 November 2026 — registration fixes and first deployment (WR-010)
+
+**Local checks** on `feat/m2-m3-gap-fixes`, merged as PR #1 (`cbe9d86`). Environment: Windows, Node.js 24.13.0, Next.js 16.4.6.
+
+| Command/check | Result | Evidence and limits |
+|---|---|---|
+| `npm audit --omit=dev --audit-level=high` | Passed | Passed after the lockfile updates to body-parser 2.4.0 and mongoose 8.24.10. Moderate `glob`/`minimatch` advisories through `swagger-jsdoc` remain (P-3). |
+| `npm run verify` | Passed | Lint, types, 4 unit tests, 18 API tests (new: production `RATE_LIMIT_MAX`), production build. |
+| `npm run test:e2e` | 14 passed | Now also covers registration review fixes R-1 to R-6 ([review findings](review-findings.md)). |
+| GitHub Actions on PR #1 | Passed | Hosted CI on the reviewed branch before merge. |
+
+**Deployed system:**
+- **Frontend:** https://sw-dev-prac-ii-term-project.vercel.app (Vercel, `apps/web`).
+- **API:** https://sw-dev-prac-ii-term-project.onrender.com (one Render instance).
+- **Database:** MongoDB Atlas, seeded with the rule scenarios using private passwords.
+- **Setup:** see [deployment](deployment.md).
+
+| Check | Result | Who/how |
+|---|---|---|
+| API `/health` | 200, `environment: production` | HTTP request |
+| API `/api/v1/workshops` | 8 seeded workshops, including the past and one-seat scenarios | HTTP request |
+| API `/api/v1/auth/me` without a token | 401 | HTTP request |
+| Vercel home page | 200; it renders workshops fetched through `API_URL` | HTTP request |
+| Proxy `GET /api/backend/workshops` | 200 | HTTP request |
+| Proxy POST with a foreign `Origin` | 403 "Invalid request origin" | HTTP request |
+| `/registrations` as a guest | Redirects to `/login`. Next streams it as `NEXT_REDIRECT` plus a meta refresh, so the status is 200. | HTTP request |
+| Deployed smoke test ([deployment §6](deployment.md#6-deployed-smoke-test)) | Passed: guest, member, the rules, move/cancel/persistence, admin, cookie and phone checks | The team, by hand, in a private browser window |
+
+**Review status:** WR-010 is deployed and ready for human review. Remaining gaps:
+- The free Render instance sleeps when idle; warm it up before presenting ([deployment §5](deployment.md#5-warm-up-before-the-demo)).
+- The one browser console entry seen during the smoke test was a **409** from a move the rules refused (`PUT /api/backend/registrations/<id>`). Chrome logs every rejected request this way; the card showed the API's error message. That's expected behavior, not a defect.
+- A full keyboard/screen-reader review and the whole-site design pass are still outstanding (WR-009).
+
 ## 11 November 2026 — Figma UI flow (WR-012)
 
 Created the [editable FigJam board](https://www.figma.com/board/kRQSVv6OKELAeyeGuRfK8H) and [four exported design sections](design/ui-flow/README.md). The three journeys contain 55 native editable shapes and 54 connectors, plus separate title, notes, rules and demo guidance. Temporary draft graph versions were removed from the final board.
