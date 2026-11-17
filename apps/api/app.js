@@ -133,13 +133,21 @@ const auth = require("./routes/auth");
 const workshops = require("./routes/workshops");
 const registrations = require("./routes/registrations");
 
+// A hosted API receives every visitor's request through the Next.js server,
+// so its per-IP limit is effectively shared by the whole site. A deployment
+// may size it explicitly; the supplied default of 100 per 10 minutes remains.
+const rateLimitMax = Number(process.env.RATE_LIMIT_MAX || 100);
+if (!Number.isInteger(rateLimitMax) || rateLimitMax < 1) {
+  throw new Error("RATE_LIMIT_MAX must be a positive integer.");
+}
+
 const app = express();
 
 app.use(helmet());
 app.use(hpp());
 app.use(rateLimit({
   windowMs: 10 * 60 * 1000,
-  limit: process.env.NODE_ENV === "production" ? 100 : Number(process.env.RATE_LIMIT_MAX || 100),
+  limit: rateLimitMax,
   message: {
     success: false,
     error: "Too many requests from this IP, please try again later.",

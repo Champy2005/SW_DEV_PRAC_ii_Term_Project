@@ -12,7 +12,7 @@ Local setup adaptations:
 1. Split `server.js` into importable `app.js` and an explicit `startServer()` lifecycle. Startup requires database and JWT configuration, awaits MongoDB and indexes, and exposes loopback by default. CLI startup supports `HOST` and graceful SIGINT/SIGTERM shutdown.
 2. Resolve `config/config.env` relative to this package, allow `API_ENV_FILE`, and retain shell/CI variable precedence. The upstream environment file and its values were excluded; `config/config.env.example` contains local defaults and a JWT placeholder.
 3. Resolve Swagger source paths relative to the package so documentation works when started from the monorepo root.
-4. Allow an explicit development/test `RATE_LIMIT_MAX` override while retaining the original production limit.
+4. Allow an explicit `RATE_LIMIT_MAX` override; the default stays the upstream 100 requests / 10 minutes. The override first applied only outside production. On 17 November 2026 it was extended to production because a hosted API receives every visitor's request through the Next.js server, which would make the per-IP limit a site-wide one. Invalid values now stop startup. Covered by `test/rate-limit.test.js`.
 5. Add isolated MongoDB HTTP integration tests and a non-destructive development seed. Declare their tools as development dependencies.
 6. Use the workspace package name `@workshop/api`, keep the root workspace lockfile authoritative, and ignore local API configuration.
 

@@ -53,6 +53,7 @@ npm run test:e2e
 - [UI-flow overview](docs/ui-flow.md): repository diagram and screen responsibilities.
 - [Testing and demo checklist](docs/testing.md): scripted checks and human black box review.
 - [Local verification record](docs/verification.md): executed checks and remaining review gaps.
+- [Deployment guide](docs/deployment.md): Vercel frontend, a single-instance API host, MongoDB Atlas, seeding, warm-up and the deployed smoke test.
 - [Prioritized roadmap](docs/roadmap.md): mandatory functions before extra credit.
 - [Delivery plan](docs/plan.md) and [ticket board](docs/tickets.md): small implementation batches and review checkpoints.
 - [Agent instructions](AGENTS.md): implementation and verification expectations.

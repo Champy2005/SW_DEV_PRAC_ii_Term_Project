@@ -6,7 +6,7 @@ This is a local board in the repository, not externally created GitHub issues. L
 
 ## At a glance
 
-**WR-001, WR-002, WR-003 and WR-012** are ready for human review. Current progress: **4 Review, 11 Queued, 0 Active, 0 Accepted**. The code checks recorded on 8 November passed (4 unit tests, 17 API tests, lint, types, build and 14 browser journeys). On 11 November, the Figma UI-flow artifact and four PNG exports were added; application tests were not rerun for this design-only work. Existing implementation and passing automation are not human acceptance.
+**WR-001, WR-002, WR-003 and WR-012** are ready for human review. Current progress: **4 Review, 10 Queued, 1 Active (WR-010), 0 Accepted**. The code checks recorded on 8 November passed (4 unit tests, 17 API tests, lint, types, build and 14 browser journeys). On 11 November, the Figma UI-flow artifact and four PNG exports were added; application tests were not rerun for this design-only work. Existing implementation and passing automation are not human acceptance.
 
 **Next:** WR-004, guest discovery and returning to the selected workshop after authentication. Full results and current limitations are in the [8 November verification entry](verification.md#8-november-2026--wr-001003).
 
@@ -21,7 +21,7 @@ This is a local board in the repository, not externally created GitHub issues. L
 | [WR-007](#wr-007--admin-workshop-management) | Admin workshop CRUD | Present, needs focused review | Queued | WR-002 |
 | [WR-008](#wr-008--admin-management-of-member-registrations) | Admin manages other members' records | Present, needs focused review | Queued | WR-005, WR-007 |
 | [WR-009](#wr-009--responsive-accessible-ui-and-flow-design) | Phone/keyboard usability and UI flow | Responsive CSS; editable Figma flow available | Queued | WR-004–008 |
-| [WR-010](#wr-010--persistent-deployment-and-vercel) | Persistent API/database and Vercel frontend | Local/demo only verified historically | Queued | WR-006, WR-008 |
+| [WR-010](#wr-010--persistent-deployment-and-vercel) | Persistent API/database and Vercel frontend | Guide and config prepared 17 Nov; not deployed | Active | WR-006, WR-008 |
 | [WR-011](#wr-011--regression-and-ci-evidence) | Current regression and CI evidence | CI and tests exist | Queued | WR-006, WR-008–010 |
 | [WR-012](#wr-012--submission-design-artifact) | Exportable UI design artifact | Editable FigJam and four PNG exports | Review | WR-009 final alignment |
 | [WR-013](#wr-013--seven-minute-presentation) | Slides and exact demo journey | Checklist only | Queued | WR-010–012 |
@@ -123,6 +123,11 @@ This is a local board in the repository, not externally created GitHub issues. L
 **Acceptance:** Next frontend runs on Vercel with server-only `API_URL`; API/database survive frontend redeploys; HTTPS cookies/login/logout/origin checks work; concurrent registration guarantees are preserved by the chosen API topology; no fixture credentials/secrets are unintentionally exposed. Do not assume the long-running process-local serializer works across serverless instances.
 
 **Verify/review:** deployment checklist/config first, then the authorized deployed member/admin journey in a new browser session. Record real URLs and hosting decisions. Account credentials/provider selection and publishing are external dependencies; preparation can proceed locally.
+
+**Progress, 17 November (preparation only, nothing deployed):**
+- **Guide:** the [deployment guide](deployment.md) chooses a Vercel frontend, one always-on API instance and MongoDB Atlas. It covers seeding with private passwords, environment variables, warm-up and the deployed smoke test.
+- **API change:** `RATE_LIMIT_MAX` now also applies in production. Through the Next.js server, the per-IP limit would otherwise be shared by the whole site. Recorded in `apps/api/UPSTREAM.md` and covered by `test/rate-limit.test.js`.
+- **Next:** the team creates the accounts and runs the guide. Then record the URLs and smoke-test results.
 
 ### WR-011 — Regression and CI evidence
 
