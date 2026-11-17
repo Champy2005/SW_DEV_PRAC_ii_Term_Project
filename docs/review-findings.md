@@ -144,7 +144,7 @@ All in [registrations-list.tsx](../apps/web/src/components/registrations-list.ts
 |---|---|---|---|---|
 | P-1 | `npm run dev:demo` crashes with a confusing error when port 5000 is busy | Bug | WR-011 | Open |
 | P-2 | Next.js 16.4.2 has a security advisory | Dependency | WR-011 | Fixed, not committed |
-| P-3 | API dependency advisories (`body-parser` high; `glob`/`minimatch` moderate, through `swagger-jsdoc`) | Assess | WR-011 | Open |
+| P-3 | API dependency advisories (`body-parser` and `mongoose` high; `glob`/`minimatch` moderate, through `swagger-jsdoc`) | Assess | WR-011 | High fixed 17 Nov in the lockfile (body-parser 2.4.0, mongoose 8.24.10, both within existing ranges); moderates open |
 
 ### P-1 — Confusing crash when the API port is busy
 
