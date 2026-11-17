@@ -46,7 +46,7 @@ A tick means understood at this batch. Add files changed later to the revisit li
 - [ ] [apps/web/src/app/admin/workshops/page.tsx](../apps/web/src/app/admin/workshops/page.tsx)
 - [ ] [apps/web/src/components/workshop-manager.tsx](../apps/web/src/components/workshop-manager.tsx)
 
-## 7. Saved workshops
+## 7. Saved workshops [PENDING]
 
 - [ ] [apps/web/src/store/index.ts](../apps/web/src/store/index.ts)
 - [ ] [apps/web/src/components/providers.tsx](../apps/web/src/components/providers.tsx)
