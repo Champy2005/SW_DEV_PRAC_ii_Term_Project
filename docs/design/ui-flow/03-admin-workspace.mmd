@@ -1,0 +1,27 @@
+flowchart LR
+    entry(["Signed-in admin"]) --> records["All registrations /registrations"]
+    records --> record["Select member registration"]
+    record --> action{"Change or cancel?"}
+    action -->|"Change"| target["Choose target workshop"]
+    target -->|"Save change"| check{"Rules pass?"}
+    check -->|"No"| regError(["Show error; keep choice"])
+    check -->|"Yes"| moved(["Same ID and owner; refresh list"])
+    action -->|"Cancel"| cancel{"Cancel it?"}
+    cancel -->|"Keep"| kept(["Keep record; return to list"])
+    cancel -->|"Yes"| remove(["Release seat; refresh list"])
+    entry --> workshops["Manage workshops /admin/workshops"]
+    workshops -->|"Create or edit"| form["Enter workshop fields"]
+    form -->|"Save"| valid{"Fields valid?"}
+    valid -->|"No"| formError(["Show error; retain input"])
+    valid -->|"Yes"| saved(["Save workshop; refresh list"])
+    workshops -->|"Delete"| deleteConfirm{"Delete workshop?"}
+    deleteConfirm -->|"Keep"| keepWorkshop(["Keep workshop; return to list"])
+    deleteConfirm -->|"Yes"| hidden(["Hide workshop; retain history"])
+    entry -->|"Log out"| logout["End browser session"]
+    logout --> guest(["Guest catalog /"])
+    classDef decision fill:#FFECBD,stroke:#C8952C
+    classDef error fill:#FFCDC2,stroke:#B85942
+    classDef success fill:#CDF4D3,stroke:#4B8C58
+    class action,check,cancel,valid,deleteConfirm decision
+    class regError,formError error
+    class moved,remove,saved,hidden success

@@ -54,7 +54,7 @@ The first ephemeral run downloads a MongoDB executable. A restricted network, an
 
 `npm run setup` copies example environment files only when local files are missing and generates a random local JWT secret. Existing local values are preserved. The API environment file is `apps/api/config/config.env`, based on `apps/api/config/config.env.example`; its settings include `MONGO_URI` and `JWT_SECRET`. The web uses `apps/web/.env.local`, with `API_URL=http://127.0.0.1:5000/api/v1`. Review the corresponding examples before starting a persistent database. The web is bound to `127.0.0.1:3000` for local development; API documentation is at `http://127.0.0.1:5000/api-docs`.
 
-The seed accounts are `admin@workshop.local` and `member@workshop.local`, both with the local-fixture password `WorkshopDemo123!`. Seeding a persistent development database preserves existing records; use a dedicated development database regardless. Ephemeral demo runs start with fresh data.
+The seed accounts are `admin@workshop.local` and `member@workshop.local` (plus `member2@workshop.local` when rule-boundary scenarios are seeded via `npm run dev:demo` or `npm run db:seed:scenarios`), all with the local-fixture password `WorkshopDemo123!`. Seeding a persistent development database preserves existing records; use a dedicated development database regardless. Ephemeral demo runs start with fresh data.
 
 ## Reproducibility and checks
 

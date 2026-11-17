@@ -23,6 +23,8 @@ npm run test:e2e
 
 Mocks can isolate a network failure. They cannot justify a claim that the real supplied backend or MongoDB was tested. Avoid snapshot-only and implementation-mirroring tests; exercise contracts, boundaries, and negative paths.
 
+This applies W13's testing levels and behavior-based assertions and W14's browser scenarios. The existing Vitest/Node HTTP/Playwright stack serves those purposes; Jest/React Testing Library and Cypress are the lecture workshop tools, not an additional project mandate. See [course alignment](course-alignment.md) and use the [ticket board](tickets.md) to separate automated evidence from human acceptance.
+
 ## Dependency audit limitation
 
 The local audit on **20 October 2026** reported **zero production dependency vulnerabilities** with `npm audit --omit=dev`. The full `npm audit` reported **7 high-severity development dependency findings**, in chains through `eslint-config-next@16.4.2` and `nodemon` that depend on the affected `braces` versions (`<=3.0.3`). The full dependency audit is therefore not clean.
@@ -71,17 +73,26 @@ Follow acceptance IDs in [requirements](requirements.md). Use at least two diffe
 
 ## Presentation and demo — 4%
 
-Orientation page 11 allocates no more than **7 minutes** for the presentation and **3 minutes** for questions. Rehearse with a seeded local stack and have a persistent database option available if demo binary downloads are restricted.
+The submission instructions pp3–4 require **7 minutes** for presentation/demo and **3 minutes** for questions, following the prescribed order. The [course delivery checklist](course-delivery.md) contains the exact steps, required links/attachments, deadlines, booking window, and attendance rules. Vercel deployment contributes **1% within this 4%**. If deployed, demonstrate the deployed application.
 
-| Time | Show |
-|---|---|
-| 0:00–0:40 | Assigned Project 3 problem, roles, supplied backend. |
-| 0:40–1:10 | UI flow diagram and brief architecture. |
-| 1:10–3:20 | Guest browse, member sign in, register, change, cancel, refresh. |
-| 3:20–4:40 | Admin workshop CRUD and another user's registration management. |
-| 4:40–5:30 | Capacity, duplicate, three-active limit, and past-date rejection. |
-| 5:30–6:15 | Class methods, real automated verification evidence, implementation decisions. |
-| 6:15–7:00 | Additional feature, team division of work, remaining limitations. |
+This is a suggested rehearsal budget, not a change to the required journey. Prepare workshops and a separate second-member registration for admin operations. Current signup automatically signs in, so log out after signup before demonstrating member login.
+
+| Time | Required steps | Show |
+|---|---|---|
+| 0:00–0:40 | 0 | Assigned Project 3 problem and UI flow. |
+| 0:40–1:30 | 1–2 | Signup with validation; log out of the automatic session, then log in as member. |
+| 1:30–2:30 | 3–4 | View workshops, create a registration, and try a condition-breaking registration. |
+| 2:30–3:40 | 5–7 | View own registration, change it, then delete it. |
+| 3:40–3:50 | 8 | Log out as member. |
+| 3:50–5:30 | 9–12 | Log in as admin; view, change, and delete another member's prepared registration. |
+| 5:30–6:10 | 13 | Create a workshop as admin. |
+| 6:10–6:30 | 14 | Show additional functionality briefly, if included. |
+| 6:30–7:00 | 15–16 | Explain team contributions/show GitHub Contributions; show the Vercel deployment and links. |
+
+- [ ] Rehearse the complete ordered journey against the intended demo data and record the actual duration.
+- [ ] Check all five registration conditions separately before the rehearsal; the short demo's invalid attempt is not complete boundary coverage.
+- [ ] Confirm the prepared admin record still exists after the member's deletion step.
+- [ ] Check repository/Vercel links in the slides and the UI design attachment through the [delivery checklist](course-delivery.md#submission-package).
 
 ## Additional functionality — 2% extra credit
 

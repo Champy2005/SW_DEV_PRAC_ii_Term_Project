@@ -4,6 +4,20 @@ Source: `6901_Project_Topics-957520-17911698720803.pdf`, page 4, **Project 3: Wo
 
 The assignment asks for a frontend for [SWDevPrac2-69-1/PJ03-WorkshopRegist](https://github.com/SWDevPrac2-69-1/PJ03-WorkshopRegist). Backend authorization and validation remain necessary even when the interface prevents invalid actions.
 
+The [ticket board](tickets.md) tracks implementation and human review; the [delivery plan](plan.md) sets the sequence. Existing code and historical test results are not automatic acceptance. Additional deadlines, Vercel scoring, required hand-in files and presentation order from the new submission PDF are recorded in [course delivery](course-delivery.md).
+
+| Acceptance group | Primary review tickets |
+|---|---|
+| U01–U06: accounts, sessions, roles and access | WR-002, WR-005, WR-007–008, WR-011 |
+| W01 and public W04: discovery and information | WR-004 |
+| W02–W04: admin workshop management and IDs | WR-007 |
+| R01–R05: member registration lifecycle and references | WR-003, WR-005 |
+| R06: admin management of all registrations | WR-008 |
+| C01–C05: workshop/registration conditions | WR-006–007 |
+| UX/UI and intentional UI flow design | WR-009, WR-012 |
+| Work quality, Vercel, presentation and submission | WR-010–014 |
+| Saved shortlist, optional extra credit | WR-015 |
+
 | ID | Required behavior | Acceptance evidence |
 |---|---|---|
 | U01 | Support `admin` and `member` roles. | Sign in as each role; show appropriate navigation. Direct member calls to admin endpoints fail. |

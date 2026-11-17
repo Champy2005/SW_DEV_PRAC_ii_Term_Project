@@ -1,0 +1,25 @@
+flowchart LR
+    guest(["Guest visitor"]) --> catalog["Explore workshops /"]
+    catalog -->|"Search"| search["Search by keyword"]
+    search --> matches{"Matches?"}
+    matches -->|"No"| empty(["No matches; change search"])
+    matches -->|"Yes"| detail["Workshop details /workshops/:id"]
+    catalog -->|"Open workshop"| detail
+    catalog -.->|"Save for later"| saved["Saved shortlist on device"]
+    saved --> detail
+    catalog -->|"Load fails"| unavailable(["Load error; retry catalog"])
+    detail --> session{"Signed in?"}
+    session -->|"No"| auth["Login /login or signup /register"]
+    auth --> authOk{"Account valid?"}
+    authOk -->|"No"| authError(["Inline error; retry form"])
+    authOk -->|"Yes"| role{"Account role?"}
+    role -->|"Member"| mine(["My registrations /registrations"])
+    role -->|"Admin"| allRegs(["All registrations /registrations"])
+    session -->|"Member"| memberFlow(["Continue to section 02"])
+    session -->|"Admin"| adminFlow(["Continue to section 03"])
+    classDef decision fill:#FFECBD,stroke:#C8952C
+    classDef error fill:#FFCDC2,stroke:#B85942
+    classDef handoff fill:#CDF4D3,stroke:#4B8C58
+    class matches,session,authOk,role decision
+    class empty,unavailable,authError error
+    class mine,allRegs,memberFlow,adminFlow handoff

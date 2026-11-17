@@ -13,7 +13,7 @@ const { app } = require("../app");
 const User = require("../models/User");
 const Workshop = require("../models/Workshop");
 const Registration = require("../models/Registration");
-const { seedDemoData, DEMO_PASSWORD } = require("../scripts/seed");
+const { seedDemoData, DEMO_PASSWORD, SCENARIO_MEMBER_EMAIL } = require("../scripts/seed");
 const { validateEnvironment } = require("../server");
 
 let database;
@@ -250,6 +250,36 @@ test("demo seeding is idempotent and preserves existing data and passwords", asy
   assert.equal(await Workshop.countDocuments({}), 7);
   assert.ok(await Workshop.findById(unrelated.id));
   assert.equal(await User.countDocuments({}), 5);
+});
+
+test("demo scenario seed sets up each rule boundary and is repeatable", async () => {
+  const seeded = await seedDemoData({ scenarios: true });
+  const login = async (email) => {
+    const response = await api.post("/api/v1/auth/login").send({ email, password: DEMO_PASSWORD }).expect(200);
+    return { Authorization: `Bearer ${response.body.data.token}` };
+  };
+  const member = await login("member@workshop.local");
+  const second = await login(SCENARIO_MEMBER_EMAIL);
+  const byName = (name) => seeded.workshops.find((item) => item.name === name);
+
+  // Demo member: two active registrations plus one past (history) registration.
+  const own = await api.get("/api/v1/registrations").set(member).expect(200);
+  assert.equal(own.body.count, 3);
+  // C02: the one-seat workshop is already taken by the second member.
+  const full = await api.post("/api/v1/registrations").set(member).send({ workshop: byName("Pottery Taster: One Seat").id }).expect(409);
+  assert.match(full.body.error, /capacity/i);
+  // C05: the past workshop is visible but cannot be registered for.
+  await api.get(`/api/v1/workshops/${byName("Sunset Watercolour").id}`).expect(200);
+  const past = await api.post("/api/v1/registrations").set(second).send({ workshop: byName("Sunset Watercolour").id }).expect(400);
+  assert.match(past.body.error, /after the workshop date/i);
+  // C04: past history does not count, so a third active registration succeeds and a fourth is refused.
+  await api.post("/api/v1/registrations").set(member).send({ workshop: byName("Design Systems in Practice").id }).expect(201);
+  const fourth = await api.post("/api/v1/registrations").set(member).send({ workshop: byName("Testing with Confidence").id }).expect(409);
+  assert.match(fourth.body.error, /at most 3/i);
+
+  await seedDemoData({ scenarios: true });
+  assert.equal(await Registration.countDocuments({}), 5);
+  assert.equal(await Workshop.countDocuments({}), 8);
 });
 
 test("server startup refuses missing Mongo configuration before opening a listener", () => {

@@ -63,7 +63,8 @@ try {
   const { startServer } = requireApi("./server.js");
   server = await startServer();
   const { seedDemoData } = requireApi("./scripts/seed.js");
-  await seedDemoData();
+  // Ephemeral demo and browser-test databases include the rule boundary scenarios.
+  await seedDemoData({ scenarios: true });
   const production = process.argv.includes("--production");
   const webPort = process.env.DEMO_WEB_PORT || "3000";
   const next = requireWeb.resolve("next/dist/bin/next");
@@ -81,7 +82,7 @@ try {
   web.on("error", (error) => { console.error(error); void stop(1); });
   web.on("exit", (code) => { if (!stopping) void stop(code || 0); });
   console.log(`\nTemporary demo: http://127.0.0.1:${webPort}`);
-  console.log("member@workshop.local or admin@workshop.local / WorkshopDemo123!");
+  console.log("member@workshop.local, member2@workshop.local or admin@workshop.local / WorkshopDemo123!");
   console.log("Data is discarded when this process stops. First run may download MongoDB.\n");
 } catch (error) {
   console.error(error);

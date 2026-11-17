@@ -41,7 +41,7 @@ The Node test runner and Supertest exercise HTTP routes against an isolated real
 
 Checks cover authentication, role and ownership rules, discovery, calendar dates, capacity, concurrent duplicate/last-seat requests, the three-active-workshop limit, registration moves and cancellation, soft deletion/history, and repeatable development seeding.
 
-`RATE_LIMIT_MAX` can raise the default 100 requests / 10 minutes for scripted development or tests. Production always retains the supplied limit of 100.
+`RATE_LIMIT_MAX` sets the limit per 10 minutes; without it, the supplied default of 100 applies in every environment. Scripted development and tests raise it. A hosted API should raise it too, because every visitor's request reaches it through the Next.js server, so the per-IP limit is effectively shared by the whole site. See [deployment](../../docs/deployment.md). An invalid value stops startup.
 
 ## API behavior to preserve
 

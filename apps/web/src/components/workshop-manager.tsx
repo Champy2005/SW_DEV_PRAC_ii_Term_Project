@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useRef, useState, type FormEvent } from 'react';
+import { useRef, useState, type SubmitEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/api';
 import { formatWorkshopDate, todayUtc } from '@/lib/rules';
@@ -19,7 +19,7 @@ export function WorkshopManager({ workshops }: { workshops: Workshop[] }) {
     setEditing(workshop); setEditorOpen(true); setError(''); setSuccess(''); setDeleting(null);
     setTimeout(() => editorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 0);
   }
-  async function save(event: FormEvent<HTMLFormElement>) {
+  async function save(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const body = { name: String(form.get('name')).trim(), description: String(form.get('description')).trim(), instructor: String(form.get('instructor')).trim(), workshopDate: String(form.get('workshopDate')), location: String(form.get('location')).trim(), capacity: Number(form.get('capacity')) };
