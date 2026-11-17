@@ -1,4 +1,36 @@
-# Local verification record
+# Verification history
+
+## 11 November 2026 — Figma UI flow (WR-012)
+
+Created the [editable FigJam board](https://www.figma.com/board/kRQSVv6OKELAeyeGuRfK8H) and [four exported design sections](design/ui-flow/README.md). The three journeys contain 55 native editable shapes and 54 connectors, plus separate title, notes, rules and demo guidance. Temporary draft graph versions were removed from the final board.
+
+| Check | Result | Scope |
+|---|---|---|
+| Current source comparison | Checked | Actual routes, immediate signup session, role-specific `/registrations`, create/move/cancel behavior, soft deletion, backend conditions and access rules. WR-004 is explicitly marked planned. |
+| Figma structure | Checked | Three journey sections, one rules section and a start section. Screen/action nodes and arrows remain editable. Connector bounds are within their journey sections. |
+| Visual review | Checked | Each completed section rendered and inspected; a crossing admin logout arrow was corrected. Text, decisions, error outcomes, confirmations and notes are readable. |
+| Local exports | Checked | Four PNG files downloaded from Figma, opened and checked as images. Mermaid files preserve the flow logic. |
+
+This task changed design artifacts and documentation only. Application tests and remote CI were not rerun; the 8 November application results below remain historical evidence. WR-012 is ready for human review, not accepted or submitted. Final portal-format confirmation, attachment upload and navigation alignment after future changes remain separate steps.
+
+## 8 November 2026 — WR-001–003
+
+Checked the working tree based on `74793b4`, including the new plan/ticket docs, readable account flow, and truthful registration confirmation. Environment: Windows, Node.js 24.13.0, Next.js 16.4.2, React 19.3.1.
+
+| Command/check | Result | Evidence and limits |
+|---|---|---|
+| `npm run verify` | Passed | Lint, strict TypeScript/Next types, 4 unit tests, 17 HTTP/MongoDB integration tests, production web build. |
+| `npm run test:e2e` | 14 passed, none skipped | Production Next server, real Express API and disposable real MongoDB; Chromium. Six new auth cases, two new confirmation cases, and six existing journeys. |
+| `git diff --check` | Passed | No whitespace errors in tracked changes. |
+| Documentation review | Checked | Three supplied PDFs read; submission pages visually inspected; plan/ticket/source mapping and local document links checked. |
+
+WR-002 adds required/whitespace validation, wrong-password retry, duplicate-email feedback, no-session-on-failure and admin-signup checks. WR-003 verifies that fabricated, another member's, repeated query values and admin views do not manufacture a success banner, and that cancellation removes a previously valid banner even with the old URL query. Existing member/admin CRUD, conditions, reference IDs and cookie/origin checks still pass.
+
+The duplicate-email test intentionally triggers an upstream MongoDB duplicate-key log; the browser receives the existing friendly 409 response and no session. No backend controllers, dependency versions or hosting configuration changed in this batch.
+
+**Review status:** WR-001–003 are ready for human review, not accepted. Remote CI was not triggered for this working tree. Dependency audit, Docker/Atlas persistence, deployed behavior and complete keyboard/screen-reader review were not rerun. The historical results below retain their original dates and do not establish those checks for today's changes.
+
+## 21 October 2026 — baseline (historical)
 
 Executed on 21 October 2026 on Windows with Node.js 24.13.0, Next.js 16.4.2, and React 19.3.1.
 

@@ -1,0 +1,31 @@
+%% Source for ui-flow.png (FigJam section "UI flow", node 20:342).
+%% Square = page, rounded = action on that page.
+flowchart LR
+    visitor(["Visitor"]) --> home["Explore workshops"]
+    home --> detail["Workshop details"]
+    detail -->|"Log in to register"| login["Log in"]
+    login <--> signup["Sign up"]
+    login --> role{"Role?"}
+    signup --> role
+
+    subgraph adminArea ["Admin"]
+        allRegs["All registrations"]
+        manage["Manage workshops"]
+        booking("Change or cancel booking")
+        editWs("Create, edit, delete")
+    end
+
+    subgraph memberArea ["Member"]
+        mine["My registrations"]
+        change("Change workshop")
+        cancel("Cancel registration")
+    end
+
+    role -->|"Admin"| allRegs
+    role -->|"Member"| mine
+    detail -->|"Register"| mine
+    allRegs --> manage
+    allRegs --> booking
+    manage --> editWs
+    mine --> change
+    mine --> cancel

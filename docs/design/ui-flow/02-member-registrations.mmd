@@ -1,0 +1,23 @@
+flowchart LR
+    entry(["Signed-in member"]) --> detail["Workshop details /workshops/:id"]
+    detail --> eligible{"Can register?"}
+    eligible -->|"No"| blocked(["Past / duplicate / 3-active guidance"])
+    eligible -->|"Yes"| submit["Register for workshop"]
+    submit --> accepted{"Accepted?"}
+    accepted -->|"No"| error(["Rule error; retry on details"])
+    accepted -->|"Yes"| mine["My registrations /registrations; reference ID"]
+    mine -->|"Change workshop"| choose["Choose new workshop"]
+    choose -->|"Save change"| moved{"Move accepted?"}
+    moved -->|"No"| moveError(["Show error; keep choice"])
+    moved -->|"Yes"| updated(["Same ID and owner; refresh list"])
+    mine -->|"Cancel registration"| confirm{"Cancel it?"}
+    confirm -->|"Keep"| kept(["Keep registration; return to list"])
+    confirm -->|"Yes"| removed(["Release seat; refresh list"])
+    mine -->|"Log out"| logout["End browser session"]
+    logout --> guest(["Guest catalog /"])
+    classDef decision fill:#FFECBD,stroke:#C8952C
+    classDef error fill:#FFCDC2,stroke:#B85942
+    classDef success fill:#CDF4D3,stroke:#4B8C58
+    class eligible,accepted,moved,confirm decision
+    class blocked,error,moveError error
+    class updated,removed success

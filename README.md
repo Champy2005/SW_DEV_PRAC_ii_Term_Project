@@ -4,6 +4,10 @@ Software Development Practice II · Project 3. A Next.js 16 frontend for the sup
 
 The setup follows the class's React, TypeScript, App Router, Tailwind, fetch, hooks, and Redux Toolkit methods. See [course alignment](docs/course-alignment.md) for lecture evidence and deliberate deviations.
 
+## Follow the build
+
+Start with the [ticket board](docs/tickets.md) for current status, acceptance checks, and short review steps. The [delivery plan](docs/plan.md) explains the implementation order; the [course delivery checklist](docs/course-delivery.md) covers the new testing/submission instructions and 18 November deadline. Existing features, newly verified work, and human acceptance are tracked separately.
+
 ## Run locally
 
 Install Node.js 24 LTS (also recorded in `.nvmrc`) and npm. Run commands from this repository root:
@@ -45,10 +49,12 @@ npm run test:e2e
 - [Requirements and acceptance matrix](docs/requirements.md): every Project 3 requirement.
 - [Architecture and setup decisions](docs/architecture.md): data flow, authentication, database modes.
 - [Course alignment](docs/course-alignment.md): lecture filenames and page references.
-- [UI flow](docs/ui-flow.md): guest, member, and admin journeys.
+- [Editable Figma UI flow](https://www.figma.com/board/kRQSVv6OKELAeyeGuRfK8H) and [design exports](docs/design/ui-flow/README.md): a page-level flow for guests, members and admins, plus the [page designs](https://www.figma.com/design/5ETqiVL4C09eBVlFAdOxnH) for desktop and mobile.
+- [UI-flow overview](docs/ui-flow.md): repository diagram and screen responsibilities.
 - [Testing and demo checklist](docs/testing.md): scripted checks and human black box review.
 - [Local verification record](docs/verification.md): executed checks and remaining review gaps.
 - [Prioritized roadmap](docs/roadmap.md): mandatory functions before extra credit.
+- [Delivery plan](docs/plan.md) and [ticket board](docs/tickets.md): small implementation batches and review checkpoints.
 - [Agent instructions](AGENTS.md): implementation and verification expectations.
 
 The source assignment is `6901_Project_Topics-957520-17911698720803.pdf`, page 4. The supplied backend is [PJ03-WorkshopRegist](https://github.com/SWDevPrac2-69-1/PJ03-WorkshopRegist). Lecture PDFs are reference material and are not copied into the repository.

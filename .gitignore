@@ -11,3 +11,7 @@ tmp/
 apps/api/config/config.env
 *.log
 .DS_Store
+# Course reference PDFs remain local; submission exports have separate paths.
+/Project-Submission-Presentation-Instructions_6aecab16d9430.pdf
+/W13_Testing-957520-17617264035331.pdf
+/W14_TestingDeploy-957520-17938047974877.pdf

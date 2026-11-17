@@ -1,6 +1,8 @@
 # UI flow design
 
-This diagram is the intended Project 3 review flow. Keep it synchronized with implemented navigation. Source requirements: `6901_Project_Topics-957520-17911698720803.pdf`, page 4; presentation/UI flow requirement: `00_ClassOrientation-957520-17859437725987.pdf`, page 11.
+The editable design is now available in [Figma / FigJam](https://www.figma.com/board/kRQSVv6OKELAeyeGuRfK8H), with [section links, PNG exports and flow sources](design/ui-flow/README.md). The board's [clean UI flow overview](https://www.figma.com/board/kRQSVv6OKELAeyeGuRfK8H?node-id=20-342) is the presentation version; page designs are in [CraftTable - Page Designs](https://www.figma.com/design/5ETqiVL4C09eBVlFAdOxnH). It contains guest/account, member and admin journeys plus rules and presentation notes.
+
+This overview describes the implemented Project 3 flow, source-checked on 11 November 2026. Source requirements: `6901_Project_Topics-957520-17911698720803.pdf`, p4; updated design and presentation requirements: `Project-Submission-Presentation-Instructions_6aecab16d9430.pdf`, pp1–4. Track improvements in the [ticket board](tickets.md).
 
 ```mermaid
 flowchart TD
@@ -10,28 +12,36 @@ flowchart TD
     Catalog --> Saved[Saved workshop shortlist]
     Saved --> Detail
     Detail --> Session{Signed in?}
-    Session -->|No| Login[Sign in]
-    Login --> Signup[Create account]
-    Signup --> Login
-    Login --> Role{Account role}
+    Session -->|No| Auth[Sign in or create account]
+    Auth --> AuthResult{Authentication accepted?}
+    AuthResult -->|No| AuthError[Show error and retain form values]
+    AuthError --> Auth
+    AuthResult -->|Yes| Role{Account role}
     Session -->|Member| Register[Confirm workshop registration]
-    Role -->|Member| Catalog
+    Role -->|Member| Mine
     Register --> Result{Server accepts?}
     Result -->|Yes| Mine[My registrations]
-    Result -->|No| RuleError[Explain error and refresh workshop state]
+    Result -->|No| RuleError[Explain error and keep current view]
     RuleError --> Detail
     Mine --> Move[Change registered workshop]
-    Move --> Register
+    Mine --> Catalog
+    Move --> SaveMove[Save workshop change]
+    SaveMove --> MoveResult{Server accepts change?}
+    MoveResult -->|Yes| SameReference[Keep reference ID and owner]
+    SameReference --> Mine
+    MoveResult -->|No| MoveError[Show error and retain selection]
+    MoveError --> Move
     Mine --> Cancel[Confirm cancellation]
     Cancel --> Mine
-    Role -->|Admin| Admin[Admin workspace]
+    Role -->|Admin| Registrations[All users' registrations]
+    Registrations --> Admin[Admin workspace navigation]
     Session -->|Admin| Admin
     Admin --> Workshops[Manage workshops]
     Workshops --> WorkshopForm[Create or edit workshop]
     WorkshopForm --> Workshops
     Workshops --> DeleteWorkshop[Confirm workshop deletion]
     DeleteWorkshop --> Workshops
-    Admin --> Registrations[All users' registrations]
+    Admin --> Registrations
     Registrations --> AdminMove[Change a user's workshop]
     AdminMove --> Registrations
     Registrations --> AdminCancel[Confirm registration deletion]
@@ -40,6 +50,10 @@ flowchart TD
     Admin --> Logout
     Logout --> Catalog
 ```
+
+Successful signup already establishes a session and opens `/registrations`; it does not require an immediate second login. Both roles land on that route, which shows the member's own records or the admin's all-users list. For the prescribed presentation's separate login step, log out after signup and then log in. Returning to an intended workshop after authentication is planned in WR-004 and is not shown as completed behavior here.
+
+The success notice on `/registrations?registered=...` is shown only when the signed-in member's authorized list contains that reference. Failed, foreign or cancelled references do not produce a success notice.
 
 ## Screen responsibilities
 
