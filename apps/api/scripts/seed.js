@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const Workshop = require("../models/Workshop");
 const Registration = require("../models/Registration");
+const connectDB = require("../config/db");
 
 const DEMO_PASSWORD = "WorkshopDemo123!";
 const DEMO_EMAILS = { admin: "admin@workshop.local", member: "member@workshop.local" };
@@ -109,7 +110,9 @@ async function seedDemoData({
 async function main() {
   if (!process.env.MONGO_URI) throw new Error("MONGO_URI is required. Configure config/config.env before seeding.");
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    // Same connection helper as the API, including its public DNS resolvers
+    // for Atlas SRV lookups (a local DNS proxy may refuse them).
+    await connectDB();
     const scenarios = process.argv.includes("--scenarios");
     const result = await seedDemoData({ scenarios });
     console.log(`Demo data ready: ${Object.keys(result.users).length} accounts, ${result.workshops.length} workshops${scenarios ? " (with rule scenarios)" : ""}.`);
