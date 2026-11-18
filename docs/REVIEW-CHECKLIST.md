@@ -43,14 +43,14 @@ A tick means understood at this batch. Add files changed later to the revisit li
 
 ## 6. Admin screens
 
-- [ ] [apps/web/src/app/admin/workshops/page.tsx](../apps/web/src/app/admin/workshops/page.tsx)
-- [ ] [apps/web/src/components/workshop-manager.tsx](../apps/web/src/components/workshop-manager.tsx)
+- [/] [apps/web/src/app/admin/workshops/page.tsx](../apps/web/src/app/admin/workshops/page.tsx)
+- [/] [apps/web/src/components/workshop-manager.tsx](../apps/web/src/components/workshop-manager.tsx)
 
-## 7. Saved workshops [PENDING]
+## 7. Saved workshops
 
-- [ ] [apps/web/src/store/index.ts](../apps/web/src/store/index.ts)
-- [ ] [apps/web/src/components/providers.tsx](../apps/web/src/components/providers.tsx)
-- [] [apps/web/src/components/save-button.tsx](../apps/web/src/components/save-button.tsx)
+- [/] [apps/web/src/store/index.ts](../apps/web/src/store/index.ts)
+- [/] [apps/web/src/components/providers.tsx](../apps/web/src/components/providers.tsx)
+- [/] [apps/web/src/components/save-button.tsx](../apps/web/src/components/save-button.tsx)
 
 ## 8. Styling and visual components [PENDING/DON'T CARE FOR NOW]
 

@@ -116,7 +116,7 @@ Remove-Item Env:MONGO_URI, Env:DEMO_ADMIN_PASSWORD, Env:DEMO_MEMBER_PASSWORD
 
 ## 5. Warm-up before the demo
 
-A sleeping free API instance can take up to about a minute to start. The Next.js server waits only 10 seconds for the API, then shows "The workshop service is unavailable. Please try again shortly." So a few minutes before presenting:
+The free Render instance sleeps after about 15 idle minutes. On 18 November a cold start took **over 100 seconds**. The Next.js server waits only 10 seconds for the API, then shows "The workshop service is unavailable. Please try again shortly." Login fails the same way. So about 5 minutes before presenting:
 
 1. Open `https://<api-host>/health` and wait for the JSON.
 2. Open the Vercel site and log in once.
