@@ -1,14 +1,14 @@
 # Project 3 ticket board
 
-Updated: 11 November 2026. [Plan](plan.md) · [Requirements](requirements.md) · [Verification](verification.md) · [Course delivery](course-delivery.md)
+Updated: 18 November 2026. [Plan](plan.md) · [Requirements](requirements.md) · [Verification](verification.md) · [Course delivery](course-delivery.md)
 
 This is a local board in the repository, not externally created GitHub issues. Legacy `T-10`, `T-13`, and `T-50` labels in commit `74793b4` describe earlier work; the `WR-` IDs below are the new review sequence.
 
 ## At a glance
 
-**WR-001, WR-002, WR-003 and WR-012** are ready for human review. Current progress: **4 Review, 10 Queued, 1 Active (WR-010), 0 Accepted**. The code checks recorded on 8 November passed (4 unit tests, 17 API tests, lint, types, build and 14 browser journeys). On 11 November, the Figma UI-flow artifact and four PNG exports were added; application tests were not rerun for this design-only work. Existing implementation and passing automation are not human acceptance.
+Current progress: **4 Accepted (WR-005–008), 6 Review (WR-001–003, WR-010, WR-012, WR-015), 1 Active (WR-014), 4 Queued (WR-004, WR-009, WR-011, WR-013)**. On 18 November the team tested WR-005–008 by hand and accepted them, finished reading the saved-workshops code, and booked the presentation slot. Deployed on 17 November: https://sw-dev-prac-ii-term-project.vercel.app. The latest local checks (17 November) passed: 4 unit tests, 18 API tests, lint, types, build and 14 browser journeys; CI also passed. On 11 November, the Figma UI-flow artifact and four PNG exports were added; application tests were not rerun for this design-only work. Existing implementation and passing automation are not human acceptance.
 
-**Next:** WR-004, guest discovery and returning to the selected workshop after authentication. Full results and current limitations are in the [8 November verification entry](verification.md#8-november-2026--wr-001003).
+**Next, before the 18 November 23:00 deadline:** WR-013 slides and a timed rehearsal, then the WR-014 MCV submission. WR-004 (returning to the chosen workshop after sign-in) is optional polish: plain login (U03) already works. Full results and current limitations are in the [verification history](verification.md).
 
 | Ticket | Deliverable | Existing baseline | Status | Depends on |
 |---|---|---|---|---|
@@ -16,17 +16,17 @@ This is a local board in the repository, not externally created GitHub issues. L
 | [WR-002](#wr-002--readable-and-reliable-accounts) | Readable account flow and error cases | Working happy paths | Review | WR-001 |
 | [WR-003](#wr-003--truthful-registration-confirmation) | Confirm only a real authorized registration | False-success bug at baseline; fixed | Review | WR-001 |
 | [WR-004](#wr-004--guest-discovery-and-return-after-sign-in) | Guest discovery and return after sign-in | Catalog/search/detail present | Queued | WR-002 |
-| [WR-005](#wr-005--member-registration-lifecycle) | Member create/view/move/cancel | Present, needs focused review | Queued | WR-003–004 |
-| [WR-006](#wr-006--all-five-registration-conditions) | Date, capacity, duplicate and active-limit rules | API tests and fixtures present | Queued | WR-005 |
-| [WR-007](#wr-007--admin-workshop-management) | Admin workshop CRUD | Present, needs focused review | Queued | WR-002 |
-| [WR-008](#wr-008--admin-management-of-member-registrations) | Admin manages other members' records | Present, needs focused review | Queued | WR-005, WR-007 |
+| [WR-005](#wr-005--member-registration-lifecycle) | Member create/view/move/cancel | Tested by the team on 18 Nov | Accepted | WR-003–004 |
+| [WR-006](#wr-006--all-five-registration-conditions) | Date, capacity, duplicate and active-limit rules | API tests; tested by the team on 18 Nov | Accepted | WR-005 |
+| [WR-007](#wr-007--admin-workshop-management) | Admin workshop CRUD | Tested by the team on 18 Nov | Accepted | WR-002 |
+| [WR-008](#wr-008--admin-management-of-member-registrations) | Admin manages other members' records | Tested by the team on 18 Nov | Accepted | WR-005, WR-007 |
 | [WR-009](#wr-009--responsive-accessible-ui-and-flow-design) | Phone/keyboard usability and UI flow | Responsive CSS; editable Figma flow available | Queued | WR-004–008 |
-| [WR-010](#wr-010--persistent-deployment-and-vercel) | Persistent API/database and Vercel frontend | Guide and config prepared 17 Nov; not deployed | Active | WR-006, WR-008 |
+| [WR-010](#wr-010--persistent-deployment-and-vercel) | Persistent API/database and Vercel frontend | Deployed 17 Nov: Vercel + one Render API + Atlas; smoke test passed | Review | WR-006, WR-008 |
 | [WR-011](#wr-011--regression-and-ci-evidence) | Current regression and CI evidence | CI and tests exist | Queued | WR-006, WR-008–010 |
 | [WR-012](#wr-012--submission-design-artifact) | Exportable UI design artifact | Editable FigJam and four PNG exports | Review | WR-009 final alignment |
 | [WR-013](#wr-013--seven-minute-presentation) | Slides and exact demo journey | Checklist only | Queued | WR-010–012 |
-| [WR-014](#wr-014--final-submission-check) | Correct links, contributions and hand-in | Not prepared | Queued | WR-011–013 |
-| [WR-015](#wr-015--optional-saved-workshops) | Saved-workshop shortlist polish | Present | Queued | Required tickets first |
+| [WR-014](#wr-014--final-submission-check) | Correct links, contributions and hand-in | Presentation slot booked | Active | WR-011–013 |
+| [WR-015](#wr-015--optional-saved-workshops) | Saved-workshop shortlist polish | Present; code read by the team | Review | Required tickets first |
 
 ## First review batch
 
@@ -84,6 +84,8 @@ This is a local board in the repository, not externally created GitHub issues. L
 
 **Verify/review:** fresh member -> register -> reload -> change workshop -> cancel -> empty state; inspect a second account. Use API ownership negatives and browser journeys against real MongoDB.
 
+**Evidence, 18 November:** accepted. The team tested the lifecycle by hand. The browser suite and the API ownership tests also cover it ([verification](verification.md)).
+
 ### WR-006 — All five registration conditions
 
 **Requirements:** C01–C05. **Scope:** verify existing backend conditions and frontend guidance for creates and moves; make any failing case a focused fix.
@@ -91,6 +93,8 @@ This is a local board in the repository, not externally created GitHub issues. L
 **Acceptance:** valid UTC today works; past creation/registration fails; capacity and duplicate checks hold under concurrent requests; fourth active registration fails; past/inactive history is excluded; moving/cancelling releases the old seat; capacity edits cannot overbook.
 
 **Verify/review:** use full/past/near-limit demo fixtures and HTTP boundary tests. Record a small expected/actual table for all five conditions; never infer available places from capacity alone.
+
+**Evidence, 18 November:** accepted. The team tested all five conditions by hand with the scenario data. The API tests cover the boundaries, including concurrent last-seat and duplicate requests.
 
 ### WR-007 — Admin workshop management
 
@@ -100,6 +104,8 @@ This is a local board in the repository, not externally created GitHub issues. L
 
 **Verify/review:** admin creates a workshop -> guest sees it -> admin edits -> guest reloads -> admin deletes -> catalog hides it. Check phone form and unauthorized API calls.
 
+**Evidence, 18 November:** accepted after the team tested admin create, edit and delete by hand.
+
 ### WR-008 — Admin management of member registrations
 
 **Requirements:** R06, U06. **Scope:** review the all-members list, owner context, moves and cancellations.
@@ -107,6 +113,8 @@ This is a local board in the repository, not externally created GitHub issues. L
 **Acceptance:** admin can see, move and delete any member registration; creation remains member-only; record owner is retained; the member sees admin changes; destination rules remain enforced.
 
 **Verify/review:** use two members; create records, then switch to admin and manage one from each. Recheck each member's list and rejected rule cases.
+
+**Evidence, 18 November:** accepted after the team tested admin move and delete of another member's registration by hand.
 
 ### WR-009 — Responsive accessible UI and flow design
 
@@ -124,10 +132,15 @@ This is a local board in the repository, not externally created GitHub issues. L
 
 **Verify/review:** deployment checklist/config first, then the authorized deployed member/admin journey in a new browser session. Record real URLs and hosting decisions. Account credentials/provider selection and publishing are external dependencies; preparation can proceed locally.
 
-**Progress, 17 November (preparation only, nothing deployed):**
-- **Guide:** the [deployment guide](deployment.md) chooses a Vercel frontend, one always-on API instance and MongoDB Atlas. It covers seeding with private passwords, environment variables, warm-up and the deployed smoke test.
-- **API change:** `RATE_LIMIT_MAX` now also applies in production. Through the Next.js server, the per-IP limit would otherwise be shared by the whole site. Recorded in `apps/api/UPSTREAM.md` and covered by `test/rate-limit.test.js`.
-- **Next:** the team creates the accounts and runs the guide. Then record the URLs and smoke-test results.
+**Evidence, 17 November (deployed):**
+- **Live:** https://sw-dev-prac-ii-term-project.vercel.app, backed by one Render API instance (https://sw-dev-prac-ii-term-project.onrender.com) and MongoDB Atlas, deployed from `main` at `cbe9d86`.
+- **Setup:** the [deployment guide](deployment.md) records the setup, including seeding with private passwords.
+- **API change:** `RATE_LIMIT_MAX` now also applies in production, because through the Next.js server the per-IP limit would otherwise be shared by the whole site. Recorded in `apps/api/UPSTREAM.md` and covered by `test/rate-limit.test.js`.
+- **Checks:**
+  - HTTP checks: health, workshops, the 401 guard, the proxy and the cross-origin 403.
+  - The team's manual smoke test passed.
+  - Details are in the [17 November verification entry](verification.md#17-november-2026--registration-fixes-and-first-deployment-wr-010).
+- **Open:** human acceptance; warm up the free API before presenting. The single console error in the smoke test was an expected 409 from a move the rules refused.
 
 ### WR-011 — Regression and CI evidence
 
@@ -163,6 +176,8 @@ This is a local board in the repository, not externally created GitHub issues. L
 
 **Verify/review:** open each final link/file from the checklist. Human confirms actual booking/upload/submission; planning or local file generation never counts as a submitted project.
 
+**Progress, 18 November:** the presentation slot is booked. Still to do: slides with both URLs, the UI-design attachment and the MCV submission before 23:00.
+
 ### WR-015 — Optional saved workshops
 
 **Requirements:** extra functionality up to 2%, Redux application. **Scope:** review the existing shortlist only after required behavior is stable.
@@ -170,3 +185,5 @@ This is a local board in the repository, not externally created GitHub issues. L
 **Acceptance:** saved IDs persist on the device, clearing/corrupt storage does not break the app, saved does not imply registered or reserve a seat, and the feature is explained accurately in the demo.
 
 **Verify/review:** save two -> reload -> filter saved -> unsave; compare registration count. Optional: no payments, waitlists, chat or unrelated features in this plan.
+
+**Evidence, 18 November:** the team has read the store, provider and save-button code. The browser suite checks that saved IDs survive a reload. A hand check of the steps above is still open.
